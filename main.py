@@ -1,5 +1,6 @@
 from entities.player import Player
 from game.engine import GameEngine
+from data.donjon_importer import import_donjon_floor
 from game.world import Floor
 from data.player_classes import choose_class
 from data.npc_dialogue import get_caretaker
@@ -29,14 +30,14 @@ def start_new_game():
     name = input("Enter your name, brave adventurer: ")
     player = Player(name)
 
-    floor = Floor(level=1, width=7, height=7)
-    world = floor
+    # load Donjon-designed floor
+    floor = import_donjon_floor("assets/maps/Floor 1/Dungeon Deep Floor 1 01.json")
 
     # Place player in safe starting room
-    player.position = floor.safe_room_pos
+    player.position = next(iter(floor.rooms))
     player.discovered_positions.add(player.position)
 
-    engine = GameEngine(player, world)
+    engine = GameEngine(player, floor)
 
     # Caretaker intro
     caretaker = get_caretaker()

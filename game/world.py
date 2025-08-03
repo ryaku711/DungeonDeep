@@ -71,10 +71,11 @@ class Floor:
         return exits
 
 class Room:
-    def __init__(self, x, y, room_type="normal", description=None):
+    def __init__(self, x, y, room_type="normal", description=None, npc=None):
         self.x = x
         self.y = y
         self.type = room_type
+        self.npc = npc
         self.visited = False
         self.locked = False
         self.description = description or self.generate_description()
