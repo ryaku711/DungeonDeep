@@ -30,14 +30,14 @@ def start_new_game():
     name = input("Enter your name, brave adventurer: ")
     player = Player(name)
 
-    # load Donjon-designed floor
+    # Load Donjon-designed floor and store it
     floor = import_donjon_floor("assets/maps/Floor 1/Dungeon Deep Floor 1 01.json")
 
-    # Place player in safe starting room
-    player.position = next(iter(floor.rooms))
+    # Place player in first room (or use a tag like entrance later)
+    player.position = next(iter(floor.rooms))  # ✅ Grab first room position
     player.discovered_positions.add(player.position)
 
-    engine = GameEngine(player, floor)
+    engine = GameEngine(player, floor)  # ✅ Use the floor instance
 
     # Caretaker intro
     caretaker = get_caretaker()
@@ -66,6 +66,7 @@ def start_new_game():
         engine.process_input(command)
 
     print("Thanks for playing!")
+
 
 
 def main():

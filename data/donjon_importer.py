@@ -57,4 +57,19 @@ def import_donjon_floor(json_path, level=1):
 
         floor.rooms[pos] = room_obj
 
+        exits = {}
+        directions = {
+            "north": (0, -1),
+            "south": (0, 1),
+            "east": (-1, 0),
+            "west": (1, 0),
+        }
+
+        for dir_name, (dx, dy) in directions.items():
+            neighbor_pos = (x + dx, y + dy)
+            if neighbor_pos in floor.rooms:
+                exits[dir_name] = "open"
+
+        room_obj.exits = exits  # Optional: if Room has an exits field
+
     return floor

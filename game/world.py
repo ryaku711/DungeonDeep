@@ -48,10 +48,7 @@ class Floor:
                     self.rooms[y][x] = Room(x, y, "normal")
 
     def get_room(self, position):
-        x, y = position
-        if 0 <= x < self.width and 0 <= y < self.height:
-            return self.rooms[y][x]
-        return None
+        return self.rooms.get(position)
 
     def get_exits(self, position):
         x, y = position
@@ -61,14 +58,15 @@ class Floor:
             "east": (x + 1, y),
             "west": (x - 1, y)
         }
+
         exits = {}
-        for dir_name, pos in directions.items():
-            room = self.get_room(pos)
-            if room:
-                # Let's say locked doors are marked on the room, e.g. room.locked_doors = ['east']
-                # For now, no locked doors - all open
-                exits[dir_name] = "locked" if getattr(room, "locked", False) else "open"
+        for dir_name, neighbor_pos in directions.items():
+            neighbor_room = self.get_room(neighbor_pos)
+            if neighbor_room:
+                exits[dir_name] = "open"  # You can extend this later to support "locked"
+
         return exits
+
 
 class Room:
     def __init__(self, x, y, room_type="normal", description=None, npc=None):

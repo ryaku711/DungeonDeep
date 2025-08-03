@@ -26,13 +26,6 @@ class GameEngine:
                 print(f"[Exits: {', '.join(exit_strings)}]")
             else:
                 print("[No visible exits]")
-
-            if room.type == "enemy":
-                print("You sense danger... maybe a fight is coming.")
-            elif room.type == "treasure":
-                print("You might want to investigate!")
-            elif room.type == "trap":
-                print("Better watch your step.")
         else:
             print("\nYou cannot go that way.")
 
@@ -62,6 +55,8 @@ class GameEngine:
             self.show_status()
         elif command == "map":
             self.render_minimap()
+        elif command == "floor":
+            self.render_full_map()
         else:
             print("\nUnknown command. Try 'north', 'n', 'east', 'e', etc.")
 
@@ -135,3 +130,41 @@ class GameEngine:
                         conn_row += " "
 
                 print(conn_row)
+
+    def render_full_map(self):
+        all_positions = self.world.rooms.keys()
+        if not all_positions:
+            print("No map to display.")
+            return
+
+        min_x = min(x for x, y in all_positions)
+        max_x = max(x for x, y in all_positions)
+        min_y = min(y for x, y in all_positions)
+        max_y = max(y for x, y in all_positions)
+
+        print("\n[Full Floor Map]")
+
+        for y in range(min_y, max_y + 1):
+            row = ""
+            for x in range(min_x, max_x + 1):
+                pos = (x, y)
+                if pos == self.player.position:
+                    row += "[X]"
+                elif pos in self.world.rooms:
+                    room_type = self.world.rooms[pos].type
+                    if room_type == "safe":
+                        row += "[S]"
+                    elif room_type == "boss":
+                        row += "[B]"
+                    elif room_type == "treasure":
+                        row += "[$]"
+                    elif room_type == "trap":
+                        row += "[!]"
+                    elif room_type == "enemy":
+                        row += "[E]"
+                    else:
+                        row += "[ ]"
+                else:
+                    row += "   "
+            print(row)
+
